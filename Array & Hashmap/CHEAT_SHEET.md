@@ -1,192 +1,120 @@
+
+
 # 🚀 ARRAY & HASH MAP CHEAT SHEET
 
 ## 🧠 QUICK MENTAL CHECKLIST
 
 ### 📊 When to use HASH MAP?
+
 ```
-❓ Do I need to COUNT something?          → Use frequency map
-❓ Do I need to GROUP items?              → key = property, value = list
+❓ Do I need to COUNT something?          → Use frequency map (key = item, value = count)
+❓ Do I need to GROUP items?              → key = property, value = list of items
 ❓ Do I need FAST LOOKUPS?                → key = item, value = anything
-❓ Do I need to store KEY-VALUE pairs?    → direct mapping
-❓ Do I need MEMOIZATION?                 → cache results
+❓ Do I need KEY-VALUE associations?      → direct mapping
+❓ Do I need MEMOIZATION / caching?      → store precomputed results
 
 If YES to any → Think HASHMAP first! 🎯
 ```
 
 ---
 
-## 🔥 COMMON PATTERNS & TEMPLATES
+### 📊 When to use ARRAY / LIST?
 
-### 1️⃣ **FREQUENCY COUNTING**
-```python
-# Pattern: Count occurrences
-freq = {}
-for item in array:
-    freq[item] = freq.get(item, 0) + 1
-
-# Or using defaultdict
-from collections import defaultdict
-freq = defaultdict(int)
-for item in array:
-    freq[item] += 1
 ```
-**Use for:** Find duplicates, most frequent element, anagrams
-
-### 2️⃣ **TWO SUM PATTERN**
-```python
-# Pattern: Find pair that sums to target
-seen = {}
-for i, num in enumerate(nums):
-    complement = target - num
-    if complement in seen:
-        return [seen[complement], i]
-    seen[num] = i
+❓ Need ordered data or sequential access?   → Use array/list
+❓ Need index-based lookup?                  → array[index] is O(1)
+❓ Need prefix/suffix computations?          → use array for cumulative sums/products
+❓ Need sliding window or two pointers?      → array is ideal
+❓ Need sorting or rearrangement?            → array/list works best
+❓ Dynamic programming grid?                  → use 1D/2D array
+❓ Subarray/subsequence problems?            → array for sequence manipulation
 ```
-**Use for:** Two sum, three sum, complement finding
-
-### 3️⃣ **GROUPING PATTERN**
-```python
-# Pattern: Group items by some property
-groups = defaultdict(list)
-for item in items:
-    key = get_property(item)  # e.g., sorted(item) for anagrams
-    groups[key].append(item)
-return list(groups.values())
-```
-**Use for:** Group anagrams, group by sum, categorization
-
-### 4️⃣ **SLIDING WINDOW + HASHMAP**
-```python
-# Pattern: Track elements in current window
-window_count = {}
-left = 0
-for right in range(len(array)):
-    # Add right element
-    window_count[array[right]] = window_count.get(array[right], 0) + 1
-    
-    # Shrink window if needed
-    while condition_violated():
-        window_count[array[left]] -= 1
-        if window_count[array[left]] == 0:
-            del window_count[array[left]]
-        left += 1
-```
-**Use for:** Longest substring problems, subarray problems
-
-### 5️⃣ **PREFIX SUM + HASHMAP**
-```python
-# Pattern: Track cumulative sums
-prefix_sum = 0
-sum_count = {0: 1}  # Important: initialize with 0
-for num in nums:
-    prefix_sum += num
-    if (prefix_sum - target) in sum_count:
-        # Found subarray with sum = target
-        count += sum_count[prefix_sum - target]
-    sum_count[prefix_sum] = sum_count.get(prefix_sum, 0) + 1
-```
-**Use for:** Subarray sum equals K, continuous subarray sum
 
 ---
 
-## ⚡ ARRAY TECHNIQUES
+## 🔥 COMMON HASHMAP PATTERNS
 
-### 🎯 **TWO POINTERS**
-```python
-# Pattern: Converging pointers
-left, right = 0, len(arr) - 1
-while left < right:
-    if condition_met():
-        # Process and move both
-        left += 1
-        right -= 1
-    elif need_larger_sum():
-        left += 1
-    else:
-        right -= 1
-```
-**Use for:** Sorted arrays, palindromes, two sum on sorted array
+| **Pattern**                 | **What it means / key idea**                       | **Example Use Cases**                                             |
+| --------------------------- | -------------------------------------------------- | ----------------------------------------------------------------- |
+| **Frequency Counting**      | key = item, value = count                          | Find duplicates, most frequent element, anagrams                  |
+| **Grouping**                | key = property, value = list of items              | Group anagrams, categorize items                                  |
+| **Two Sum / Complement**    | key = item, value = index or existence             | Find pair/tuple that sums to target                               |
+| **Sliding Window Tracking** | key = element, value = count in current window     | Longest substring without repeating characters, subarray problems |
+| **Prefix Sum Tracking**     | key = cumulative sum, value = count of occurrences | Subarray sum equals target, continuous subarray sum               |
+| **Memoization / Caching**   | key = state, value = precomputed result            | Fibonacci, DP problems                                            |
+| **Fast Existence Check**    | key = element, value = dummy / True                | Detect duplicates quickly                                         |
 
-### 🔄 **SLIDING WINDOW**
-```python
-# Pattern: Fixed size window
-window_sum = sum(arr[:k])
-max_sum = window_sum
-for i in range(k, len(arr)):
-    window_sum = window_sum - arr[i-k] + arr[i]
-    max_sum = max(max_sum, window_sum)
-```
-**Use for:** Max sum subarray of size K, moving averages
+---
+
+## ⚡ COMMON ARRAY PATTERNS
+
+| **Pattern / Technique**        | **Key Idea / Concept**                                 | **Example Use Cases**                                            |
+| ------------------------------ | ------------------------------------------------------ | ---------------------------------------------------------------- |
+| **Two Pointers**               | Use left & right indices to traverse array efficiently | Sorted array problems, palindrome check, two sum on sorted array |
+| **Sliding Window**             | Fixed or variable-size window to process subarrays     | Max sum subarray, longest substring problems                     |
+| **Prefix / Cumulative Sum**    | Precompute sums or products to answer subarray queries | Subarray sum, range sum queries                                  |
+| **Dynamic Programming Arrays** | 1D or 2D array storing state or subproblem solutions   | Longest increasing subsequence, edit distance                    |
+| **Index-based Access**         | Direct access via array\[index]                        | Lookup by position, array manipulation                           |
+| **Reordering / Sorting**       | Change order or sort for easier processing             | Merge intervals, sort colors                                     |
 
 ---
 
 ## 🏆 PROBLEM RECOGNITION GUIDE
 
-| **Problem Type** | **Key Indicators** | **Solution Pattern** |
-|------------------|-------------------|---------------------|
-| **Anagrams** | "Same characters, different order" | Sort string OR character frequency |
-| **Two Sum** | "Find pair that sums to X" | HashMap (complement lookup) |
-| **Duplicates** | "Find repeated elements" | HashSet OR frequency map |
-| **Grouping** | "Categorize by property" | HashMap with property as key |
-| **Subarray Sum** | "Continuous elements sum to X" | Prefix sum + HashMap |
-| **Frequency** | "Count occurrences" | Frequency map |
-| **Fast Lookup** | "Check if exists quickly" | HashSet |
+| **Problem Type**        | **Key Indicators**                       | **Pattern / Tool**                     |
+| ----------------------- | ---------------------------------------- | -------------------------------------- |
+| **Anagrams**            | “Same letters, different order”          | Grouping with HashMap                  |
+| **Two Sum / Pair**      | “Find pair that sums to X”               | HashMap complement lookup              |
+| **Duplicates**          | “Find repeated elements”                 | HashMap / HashSet                      |
+| **Grouping**            | “Categorize items by property”           | HashMap (key = property, value = list) |
+| **Subarray Sum**        | “Continuous elements sum to target”      | Prefix sum + HashMap                   |
+| **Frequency**           | “Count occurrences”                      | HashMap (key = item, value = count)    |
+| **Fast Lookup**         | “Check existence quickly”                | HashSet / HashMap                      |
+| **Sequence / Order**    | “Preserve order, iterate by index”       | Array / List                           |
+| **Sliding Window**      | “Longest/shortest substring or subarray” | Array + HashMap                        |
+| **Dynamic Programming** | “Optimal subproblem solution required”   | Array for storing DP states            |
 
 ---
 
 ## 🎮 COMPLEXITY CHEAT SHEET
 
-### **Hash Map Operations:**
-- **Insert/Delete/Search:** O(1) average, O(n) worst case
-- **Space:** O(n) for n elements
-
-### **Array Operations:**
-- **Access by index:** O(1)
-- **Search:** O(n) unsorted, O(log n) sorted
-- **Insert/Delete:** O(n) for arbitrary position
+| **Operation**   | **Hash Map / Dictionary** | **Array / List**            |
+| --------------- | ------------------------- | --------------------------- |
+| Insert / Update | O(1) average, O(n) worst  | O(n) for arbitrary position |
+| Lookup / Search | O(1) average, O(n) worst  | O(1) by index, O(n) search  |
+| Delete          | O(1) average              | O(n) for arbitrary position |
+| Memory / Space  | O(n)                      | O(n)                        |
 
 ---
 
-## 🧩 COMMON GOTCHAS & TIPS
+## 🧩 COMMON TIPS & GOTCHAS
 
-### ✅ **DO:**
-- Initialize HashMap with default values when needed
-- Consider using `defaultdict` for cleaner code
-- Use `enumerate()` when you need both index and value
-- Remember that HashSets are just HashMaps with dummy values
+**HashMap:**
 
-### ❌ **AVOID:**
-- Forgetting to handle empty arrays/strings
-- Not considering duplicate keys in HashMap
-- Using lists when HashSets would be more efficient
-- Nested loops when HashMap can give O(1) lookup
+* ✅ Initialize empty lists or default counts when needed
+* ✅ Use `defaultdict` for cleaner code
+* ✅ Keys must be immutable (tuple, string, int)
+* ❌ Don’t try to `.append()` to a non-list value
+* ❌ Avoid returning inside the loop when building a map
+
+**Array:**
+
+* ✅ Use indices and slices effectively
+* ✅ Precompute prefix sums when needed
+* ❌ Forgetting bounds when using two pointers or sliding window
 
 ---
 
 ## 🎯 QUICK DECISION TREE
 
 ```
-Need to solve array problem?
-├─ Need fast lookups? → HashMap/HashSet
-├─ Need to count? → Frequency Map
-├─ Array is sorted? → Two Pointers
-├─ Need subarray/substring? → Sliding Window
-├─ Need cumulative sum? → Prefix Sum + HashMap
-└─ Need grouping? → HashMap with custom keys
+Need to solve problem?
+├─ Need fast lookup or mapping → HashMap
+├─ Need counting / grouping → HashMap
+├─ Need sequential / ordered access → Array
+├─ Need subarray / substring → Array + Sliding Window
+├─ Need cumulative sums → Array + Prefix Sum
+├─ Need DP storage → Array
 ```
 
----
 
-## 🔥 LEETCODE PATTERNS
-
-| **Pattern** | **Problems** |
-|-------------|-------------|
-| **Frequency Map** | Valid Anagram, Group Anagrams, Top K Frequent |
-| **Two Sum** | Two Sum, 3Sum, 4Sum |
-| **Sliding Window** | Longest Substring, Max Sum Subarray |
-| **Prefix Sum** | Subarray Sum Equals K, Continuous Subarray Sum |
-| **Grouping** | Group Anagrams, Group Shifted Strings |
-
----
-
-*💡 Remember: When in doubt, ask yourself "Can a HashMap make this O(1)?" - if yes, use it!*
